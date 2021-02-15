@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{da106268-ca78-423f-aef9-eed194195789}</ProjectGuid>
-    <RootNamespace>Workvsfilesandfolders</RootNamespace>
+    <ProjectGuid>{327ce1b4-bc8d-4a2e-ba8f-f0616728cd1a}</ProjectGuid>
+    <RootNamespace>ArgumComandLine</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
