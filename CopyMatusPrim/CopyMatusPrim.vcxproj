@@ -21,10 +21,9 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{5072a141-198d-4efa-b5d3-bdcf7df3a287}</ProjectGuid>
-    <RootNamespace>copymovedelete</RootNamespace>
+    <ProjectGuid>{e5387c4f-5cc5-4c98-997a-fa1afb0ae378}</ProjectGuid>
+    <RootNamespace>CopyMatusPrim</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>copy_move_delete(Copy)</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -140,7 +139,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Source.cpp" />
+    <ClInclude Include="CDAF.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="CDAF.cpp" />
+    <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

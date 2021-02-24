@@ -19,7 +19,7 @@ void removeDir(const char* path)
 	// Пока есть содержимое папки
 	while (tmpHandle != -1)
 	{
-		if (strcmp(info->name, ".") != 0 && strcmp(info->name, "..") != 0)
+		if (strcmp(info->name, ".") != 0 && strcmp(info->name, "..") != 0)          
 		{
 			// Директория
 			char* newPath = new char[size];
