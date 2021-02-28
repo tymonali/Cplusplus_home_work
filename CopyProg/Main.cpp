@@ -1,8 +1,6 @@
 #include"Copy.h"
 
-
-
-int main()
+int main(int argc, char* argv[])
 {
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
@@ -10,10 +8,12 @@ int main()
 
 	Copy copy;
 	copy.CopyProg("d:\\DemoDirr01", "d:\\DemoDirr02");
-
-	//copy.Copy(argv[1], argv[2]);
+	
+	
+	//copy.CopyProg(argv[1], argv[2]);
+	
 	/*
-	"D:\Учеба Академия ШАГ\C++\ООП\GitHub\HomeWork\Debug\copy_move_delete(Copy).exe" d:\DemoDirr01 d:\DemoDirr02
+	"D:\Учеба Академия ШАГ\C++\ООП\GitHub\HomeWork\Debug\CopyProg.exe" d:\DemoDirr01 d:\DemoDirr02
 	*/
 
 	return 0;

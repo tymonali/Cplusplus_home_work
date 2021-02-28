@@ -1,24 +1,25 @@
 #include "Copy.h"
 
 void Copy::CopyProg(string pathFrom, string pathTo)
-{
-	_finddata_t* infoFrom = new _finddata_t;					// Откуда
-	_finddata_t* infoTo = new _finddata_t;						// Куда
-	string pathTmp;												// Для маски
+{	
+	_finddata_t* infoFrom = new _finddata_t;					// Откуда						// Куда
+	string mask;												// Для маски
 	string newPathFrom, newPathTo;								// Откуда и куда (путь)
-	pathTmp = pathFrom;											// Вместо strcpy_s()
-	pathTmp += "\\*.*";											// Найти все файлы
+	mask = pathFrom;											// Вместо strcpy_s()
+	mask += "\\*.*";											// Найти все файлы
 	// поиск директории
-	long dirHandleFrom = _findfirst(pathTmp.c_str(), infoFrom);
+	long dirHandleFrom = _findfirst(mask.c_str(), infoFrom);
 	// временный дескриптор для прохода по директории
 	long tmpHandleFrom = dirHandleFrom;
 	string dot = ".";
 	string dotdot = "..";
+	int count = 0;
 	while (tmpHandleFrom != -1)
 	{
 		// Игнорируем "." и ".."
 		if (dot.compare(infoFrom->name) != 0 && dotdot.compare(infoFrom->name) != 0)
 		{
+			bool doWr = false;
 			// копирование пути к текущей директории
 			newPathFrom = pathFrom;
 			// Формирование пути к новой директории
@@ -27,37 +28,88 @@ void Copy::CopyProg(string pathFrom, string pathTo)
 			newPathTo = pathTo;
 			newPathTo += "\\";
 			newPathTo += infoFrom->name;
+			
+			// если было выбрано копировать всё
+			if (doCopy == true)
+			{
+				_chmod(newPathFrom.c_str(), _S_IWRITE);
+				count++;
+			}
+			
+			/*
+			 *	Внимание! Я перелопатил огромную кучу интернет ресурсов,
+			 *	перечитал все уроки по работе с файлами!
+			 *	Атрибут read-only установлен абсолютно на все каталоги Windows!
+			 *	И удалить его НЕВОЗМОЖНО! Даже при помощи _chmod()!!!
+			 *	Поэтому смысла в проверке каталогов на наличие данного атрибута
+			 *	абсолютно никакого нет!(Кстати картавые девочки слово атрибут при
+			 *	посторонних не произносят :))
+			 *	Поэтому я буду проверять на наличие этого атрибута только файлы!
+			 *	В чем, кстати тоже особого смысла я не вижу!
+			 */
+			
 			// Если директория
 			if (infoFrom->attrib & _A_SUBDIR)
 			{
-				cout << "Dir: " << infoFrom->name << endl;
-				//if (infoFrom->attrib & _A_RDONLY)	// Вот здесь ничего не выводит!!!
-				//{
-				//	cout << " - только для чтения" << endl;
-				//}
-				cout << "Path: \n" << newPathFrom << endl << endl;
-				_mkdir(newPathTo.c_str());
+				int err = _mkdir(newPathTo.c_str());		// создаем папку в дирректории "куда"
 				CopyProg(newPathFrom, newPathTo);
 			}
 			// Если файл
 			else
 			{
-				cout << "File: " << infoFrom->name << endl;
-				cout << "Path: \n" << newPathFrom << endl << endl;
-				copyFile(newPathFrom, newPathTo);
+				/*
+				 *	Не смог найти в инете способов(примеров) правильного использования
+				 *	поля attrib структуры _finddata_t!
+				 *	Всякие методы тыка так же ничего не дали!
+				 *	Не все файлы с аттрибутом только для чтения попадают в
+				 *	if(infoFrom->attrib & _A_RDONLY) почему-то!
+				 *	Поэтому решил применить 100% работающую функцию!
+				 *	_access() с параметром разрешения 02 - возращает
+				 *	-1, если стоит флажок только для чтения!
+				 */
+				
+				int f = _access(newPathFrom.c_str(), 02);
+				if (f == -1)
+				{
+					
+					cout << "Внимание!!! Файл " << infoFrom->name;
+					cout << " - имеет аттрибут \"Только для чтения\"\n";
+					cout << "Выберите действие:\n";
+					int act = CopyAction();
+					switch(act)
+					{
+					case CopyDir:
+						
+						break;
+					case Skip:
+						doWr = true;
+						break;
+					case Copy_for_everyone:
+						doCopy = true;
+						break;
+					case Cancel:
+						exit(0);
+					}
+				}
+				// Если пользователь выбирает пропустить, то выполнение
+				// функции продолжается без копирования файла
+				if (doWr != true) 
+				{
+					copyFile(newPathFrom, newPathTo);
+					// Если атрибут изменялся, то вертаем взад!
+					if(count == 1)
+					{
+						_chmod(newPathFrom.c_str(), _S_IREAD);
+						count--;
+					}
+				}
 				CopyProg(newPathFrom, newPathTo);
-			}
+			}	
 		}
 		// Переход к следующему файлу/папке
 		tmpHandleFrom = _findnext(dirHandleFrom, infoFrom);
 		newPathFrom.clear();
 	}
-	//if (infoFrom->attrib & _A_RDONLY)		// А здесь выводит только один файл!!!
-	//{
-	//	cout << infoFrom->name << "\nПапка (файл) имеет параметр только для чтения\n" << endl;
-	//}
-	
-	
 	delete infoFrom;
 	_findclose(dirHandleFrom);
 }
@@ -84,7 +136,8 @@ int Copy::CopyAction()
 	cout << "[1] Копировать\n";
 	cout << "[2] Пропустиь\n";
 	cout << "[3] Копировать все\n";
+	cout << "[4] Отмена\n";
 	cin >> action;
 	cin.ignore();							// На всякий случай
-	return action;;
+	return action;
 }

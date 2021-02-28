@@ -12,10 +12,12 @@ class Copy
 {
 	enum
 	{
-		CopyDirr,					// Копировать
-		Skip,						// Пропустить
-		Copy_for_everyone			// Копировать для всех
+		CopyDir = 1,					// Копировать
+		Skip,							// Пропустить
+		Copy_for_everyone,				// Копировать для всех
+		Cancel							// Отмена
 	};
+	bool doCopy;
 public:
 	void CopyProg(string pathFrom, string pathTo);
 	void copyFile(string copyFrom, string copyTo);
