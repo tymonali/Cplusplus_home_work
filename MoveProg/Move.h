@@ -14,8 +14,10 @@ class Move
 	{
 		MoveDirr = 1,				// Переместить
 		Skip,						// Пропустить
-		Move_for_everyone			// Переместить для всех
+		Move_for_everyone,			// Переместить для всех
+		Cancel
 	};
+	bool doMove;
 public:
 	void moveProg(string pathFrom, string pathTo);
 	int moveAction();

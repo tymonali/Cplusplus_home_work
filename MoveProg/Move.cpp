@@ -2,6 +2,10 @@
 
 void Move::moveProg(string pathFrom, string pathTo)
 {
+	if(_access(pathTo.c_str(),00) != 0)
+	{
+		_mkdir(pathTo.c_str());
+	}
 	_finddata_t* infoFrom = new _finddata_t;					// Откуда
 	_finddata_t* infoTo = new _finddata_t;						// Куда
 	string pathTmp;												// Для маски
@@ -19,6 +23,7 @@ void Move::moveProg(string pathFrom, string pathTo)
 		// Игнорируем "." и ".."
 		if (dot.compare(infoFrom->name) != 0 && dotdot.compare(infoFrom->name) != 0)
 		{
+			bool doWr = false;
 			// копирование пути к текущей директории
 			newPathFrom = pathFrom;
 			// Формирование пути к новой директории
@@ -27,20 +32,45 @@ void Move::moveProg(string pathFrom, string pathTo)
 			newPathTo = pathTo;
 			newPathTo += "\\";
 			newPathTo += infoFrom->name;
+			if(doMove == true)
+			{
+				_chmod(newPathFrom.c_str(), _S_IWRITE);
+			}
 			// Если директория
 			if (infoFrom->attrib & _A_SUBDIR)
 			{
-				cout << "Dir: " << infoFrom->name << endl;
-				cout << "Path: \n" << newPathFrom << endl << endl;
 				rename(newPathFrom.c_str(), newPathTo.c_str());
 				moveProg(newPathFrom, newPathTo);
 			}
 			// Если файл
 			else
 			{
-				cout << "File: " << infoFrom->name << endl;
-				cout << "Path: \n" << newPathFrom << endl << endl;
-				rename(newPathFrom.c_str(), newPathTo.c_str());
+				int f = _access(newPathFrom.c_str(), 02);
+				if (f == -1)
+				{
+					cout << "Внимание!!! Файл " << infoFrom->name;
+					cout << " - имеет аттрибут \"Только для чтения\"\n";
+					cout << "Выберите действие:\n";
+					int act = moveAction();
+					switch(act)
+					{
+					case MoveDirr:
+						_chmod(newPathFrom.c_str(), _S_IWRITE);
+						break;
+					case Skip:
+						doWr = true;
+						break;
+					case Move_for_everyone:
+						doMove = true;
+						break;
+					case Cancel:
+						exit(0);
+					}
+				}
+				if (doWr != true) 
+				{
+					rename(newPathFrom.c_str(), newPathTo.c_str());
+				}
 				moveProg(newPathFrom, newPathTo);
 			}
 		}
@@ -58,6 +88,7 @@ int Move::moveAction()
 	cout << "[1] Переместить\n";
 	cout << "[2] Пропустиь\n";
 	cout << "[3] Переместить все\n";
+	cout << "[4] Отмена\n";
 	cin >> action;
 	cin.ignore();							// На всякий случай
 	return action;

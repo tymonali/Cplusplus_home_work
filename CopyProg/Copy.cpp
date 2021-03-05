@@ -1,7 +1,11 @@
 #include "Copy.h"
 
 void Copy::CopyProg(string pathFrom, string pathTo)
-{	
+{
+	if (_access(pathTo.c_str(), 00) != 0)
+	{
+		_mkdir(pathTo.c_str());
+	}
 	_finddata_t* infoFrom = new _finddata_t;					// Откуда						// Куда
 	string mask;												// Для маски
 	string newPathFrom, newPathTo;								// Откуда и куда (путь)
