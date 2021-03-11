@@ -1,8 +1,9 @@
-#pragma once
-#include"Handbook.h"
+#include "Handbook.h"
 
 class Application
 {
+	HandBook* hb;
 public:
 	void start();
+	void mainMenu();
 };

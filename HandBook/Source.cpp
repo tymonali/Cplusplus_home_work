@@ -1,19 +1,14 @@
+п»ї#include <iostream>
 #include "Application.h"
-
 using namespace std;
-
-int main() {
-	SetConsoleCP(1251);
-	SetConsoleOutputCP(1251);
-	//system("color B0");
-	/*Application app;
-	app.start();*/
-
+int main()
+{
+	system("chcp 1251");
+	system("cls");
+	system("color B0");
 	
-	
-	Address ad("Паганини", 14 ,2, "Проспект");
-
-	ad.Print(ad);
+	Application app;
+	app.start();
 
 	return 0;
 }

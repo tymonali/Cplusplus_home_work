@@ -1,11 +1,26 @@
+//
+// Created by Denver on 06.03.2021.
+//
+
 #pragma once
 #include "Abonent.h"
 
-class Handbook
-{
-	Abonent* abonents;		//список абонентов
-	int count;				//фактическое кол-во
-	int capacity;			//общее кол-во
-public:
-};
 
+
+class HandBook
+{
+    Abonent* abonents;
+    int count;
+    int capacity;
+public:
+    HandBook();
+    ~HandBook();
+    void setCapacity();
+    void add();
+    int menuCompare();
+    string searchAct(int num);
+    void search();
+    void show();
+    void save();
+    void load();
+};
