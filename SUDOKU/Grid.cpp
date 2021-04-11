@@ -194,7 +194,7 @@ bool Grid::solveSudoku()
 				return true;
 			}
 			//”становить 0 клетке, когда услови€ не выполнены
-			grid[row][col] = 0; 
+			grid[row][col] = 0;
 			Attempt++;
 		}
 	}
